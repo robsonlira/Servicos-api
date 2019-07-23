@@ -9,6 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "servico")
@@ -20,23 +24,39 @@ public class Servico implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 		
+	@NotEmpty(message = "Nome é obrigatório")
 	@Column(name="nome", length = 60, unique = true)
 	private String nome;
 	
 	@Column(name="descricao")
 	private String descricao;
 
+	@NotNull(message="Duração é obrigatório")
+	@Min(value = 1, message = "Duração não pode ser menor que 1" )
 	@Column(name="duracao")
 	private Integer duracao;
 	
+	@NotNull(message="Unidade é obrigatório")	
 	@Column(name="id_unidade")
-	private Integer idUnidade;
+	private Integer unidade;
 
+	@NotNull(message="Valor é obrigatório")
+	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
 	@Column(name="valor", precision=14, scale=2)
 	private BigDecimal valor;
 
 	
 	public Servico() {		
+	}
+		
+	public Servico(Long id, String nome, String descricao, Integer duracao, Unidade unidade, BigDecimal valor) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.descricao = descricao;
+		this.duracao = duracao;
+		this.unidade = unidade.getCod();
+		this.valor = valor;
 	}
 
 	public Long getId() {
@@ -72,11 +92,11 @@ public class Servico implements Serializable {
 	}
 
 	public Unidade getIdUnidade() {
-		return Unidade.toEnum(idUnidade);
+		return Unidade.toEnum(unidade);
 	}
 
 	public void setIdUnidade(Unidade unidade) {
-		this.idUnidade = unidade.getCod();
+		this.unidade = unidade.getCod();
 	}
 
 	public BigDecimal getValor() {

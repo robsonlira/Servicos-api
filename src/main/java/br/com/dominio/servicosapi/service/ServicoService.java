@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +33,9 @@ public class ServicoService {
 	}
 	
 	@Transactional
-	public Servico update(Servico obj) {
-		Servico newObj = findById(obj.getId());
-		//updateData(newObj, obj);
+	public Servico update(Servico entidade) {
+		Servico newObj = findById(entidade.getId());
+		updateData(newObj, entidade);
 		return repository.save(newObj);
 	}
 	
@@ -47,9 +50,21 @@ public class ServicoService {
 	}
 	
 	@Transactional
-	public Servico salvar(Servico entidade) {
-		
+	public Servico save(Servico entidade) {
+		entidade.setId(null);
 		return repository.saveAndFlush(entidade);
 	}
 
+	public Page<Servico> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repository.findAll(pageRequest);
+	}
+
+	private void updateData(Servico newObj, Servico entidade) {
+		newObj.setNome(entidade.getNome());
+		newObj.setDuracao(entidade.getDuracao());
+		newObj.setDescricao(entidade.getDescricao());
+		newObj.setValor(entidade.getValor());
+		newObj.setIdUnidade(entidade.getIdUnidade());
+	}
 }
