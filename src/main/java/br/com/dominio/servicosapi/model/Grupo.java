@@ -1,5 +1,6 @@
 package br.com.dominio.servicosapi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,7 +31,16 @@ public class Grupo {
 
 	@ManyToMany
 	@JoinTable(name = "grupo_permissao", joinColumns = @JoinColumn(name = "id_grupo"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
-	private List<Permissao> permissoes;
+	private List<Permissao> permissoes = new ArrayList<>();
+
+	public Grupo() {		
+	}
+		
+	public Grupo(Long id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
 
 	public Long getId() {
 		return id;

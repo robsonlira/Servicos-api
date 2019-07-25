@@ -31,7 +31,13 @@ public class ServicoService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Servico.class.getName()));
 	}
-	
+
+	@Transactional
+	public Servico save(Servico entidade) {
+		entidade.setId(null);
+		return repository.saveAndFlush(entidade);
+	}
+
 	@Transactional
 	public Servico update(Servico entidade) {
 		Servico newObj = findById(entidade.getId());
@@ -49,11 +55,6 @@ public class ServicoService {
 		}
 	}
 	
-	@Transactional
-	public Servico save(Servico entidade) {
-		entidade.setId(null);
-		return repository.saveAndFlush(entidade);
-	}
 
 	public Page<Servico> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);

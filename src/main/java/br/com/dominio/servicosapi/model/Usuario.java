@@ -1,5 +1,6 @@
 package br.com.dominio.servicosapi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +18,13 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -33,15 +37,20 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "Nome é obrigatório")
+	@NotEmpty(message = "Nome é obrigatório")
+	@Length(min=3, max=80, message="O tamanho deve ser entre 3 e 80 caracteres")
+	@Column(name="nome", length = 80)
 	private String nome;
 
 	@NotBlank(message = "E-mail é obrigatório")
 	@Email(message = "E-mail inválido")
+	@Column(name="email", length = 60, unique = true)
 	private String email;
 
+	@JsonIgnore
 	private String senha;
 	
+	@JsonIgnore
 	@Transient
 	private String confirmacaoSenha;
 
@@ -51,13 +60,26 @@ public class Usuario {
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "id_usuario")
 				, inverseJoinColumns = @JoinColumn(name = "id_grupo"))	
-	private List<Grupo> grupos;
+	private List<Grupo> grupos = new ArrayList<>();
 	
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.TIMESTAMP)	
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
 	
+	public Usuario() {
+	}
+
+		
+	public Usuario(Long id, String nome, String email, Boolean ativo, String senha) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.ativo = ativo;
+		this.senha = senha;
+	}
+
 	public Long getId() {
 		return id;
 	}

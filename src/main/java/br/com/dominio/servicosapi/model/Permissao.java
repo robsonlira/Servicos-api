@@ -23,6 +23,14 @@ public class Permissao {
 	@Column(name="nome", length = 30, unique = true)
 	private String nome;
 
+	public Permissao() {}
+	
+	public Permissao(Long id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
+
 	public Long getId() {
 		return id;
 	}
