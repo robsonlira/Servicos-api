@@ -46,7 +46,7 @@ public class Agendamento {
 	
 	private String observacao;
 	
-	@NotEmpty(message = "Serviço é obrigatório")
+	@NotNull(message = "Serviço é obrigatório")
 	@ManyToOne
 	@JoinColumn(name = "id_servico")
 	private Servico servico;
@@ -57,7 +57,7 @@ public class Agendamento {
 	@Column(name="valor", precision=14, scale=2)
 	private BigDecimal valor;
 
-	@NotEmpty(message = "Usuário é obrigatório")
+	@NotNull(message = "Usuário é obrigatório")
 	@ManyToOne
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;	

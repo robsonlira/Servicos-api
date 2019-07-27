@@ -2,7 +2,9 @@ package br.com.dominio.servicosapi.service;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,25 +68,19 @@ public class DBService {
         usuario.getGrupos().add(grupo1);
         usuarios.saveAndFlush(usuario);
         
-        Agendamento ag1 = new Agendamento();
-        Agendamento ag2 = new Agendamento();
+        Agendamento ag1 = new Agendamento(null, LocalDateTime.parse("2019-07-30T10:30:30"), "Observação do serviço",
+        		servico1, Status.PENDENTE, servico1.getValor(), usuario, LocalDateTime.now(), 
+    			LocalDate.parse("2019-07-30"), LocalTime.of(10, 30));
         
-        ag1.setData(LocalDateTime.now());
-        ag1.setObservacao("Observação do serviço");
-        ag1.setServico(servico1);
-        ag1.setStatus(Status.PENDENTE.getCod());
-        ag1.setValor(servico1.getValor());
-        ag1.setUsuario(usuario);
-        ag1.setDataCriacao(LocalDateTime.now());
+        Agendamento ag2 = new Agendamento(null, LocalDateTime.parse("2019-07-30T11:40:30"), "Observação do serviço",
+        		servico3, Status.PENDENTE, servico3.getValor(), usuario, LocalDateTime.now(), 
+    			LocalDate.parse("2019-07-30"), LocalTime.of(11, 40));
         
-        ag2.setData(LocalDateTime.now());
-        ag2.setServico(servico3);
-        ag2.setStatus(Status.PENDENTE.getCod());
-        ag2.setValor(servico3.getValor());
-        ag2.setUsuario(usuario);
-        ag2.setDataCriacao(LocalDateTime.now());
+        Agendamento ag3 = new Agendamento(null, LocalDateTime.parse("2019-08-02T09:25:30"), "Observação do serviço",
+        		servico3, Status.PENDENTE, servico3.getValor(), usuario, LocalDateTime.parse("2019-07-30T20:24:10"), 
+    			LocalDate.parse("2019-08-02"), LocalTime.of(9, 25,30));
 
-        agendamentos.saveAll(Arrays.asList(ag1, ag2));
+        agendamentos.saveAll(Arrays.asList(ag1, ag2, ag3));
 		
 	}
 
