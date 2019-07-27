@@ -22,24 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.dominio.servicosapi.dto.AgendamentoDTO;
-import br.com.dominio.servicosapi.dto.UsuarioDTO;
-import br.com.dominio.servicosapi.dto.UsuarioNewDTO;
+import br.com.dominio.servicosapi.dto.AgendamentoNewDTO;
 import br.com.dominio.servicosapi.model.Agendamento;
-import br.com.dominio.servicosapi.model.Usuario;
-import br.com.dominio.servicosapi.service.UsuarioService;
+import br.com.dominio.servicosapi.service.AgendamentoService;
 
 @RestController
-@RequestMapping(value = "/usuarios")
-public class UsuarioResource {
+@RequestMapping(value = "/agendamentos")
+public class AgendamentoResource {
 	
 	@Autowired
-	private UsuarioService service;
+	private AgendamentoService service;
 	
 	@GetMapping
-	public ResponseEntity<List<UsuarioDTO>> findAll(){
-		List<Usuario> list = service.findAll();
-		List<UsuarioDTO> listDto = list.stream().map(obj -> 
-	                 new UsuarioDTO(obj)).collect(Collectors.toList()); 
+	public ResponseEntity<List<AgendamentoDTO>> findAll(){
+		
+		List<Agendamento> list = service.findAll();
+		List<AgendamentoDTO> listDto = list.stream().map(obj -> 
+		            new AgendamentoDTO(obj)).collect(Collectors.toList()); 
 		
 		return ResponseEntity.status(HttpStatus.OK).
 				body(listDto);
@@ -48,44 +47,37 @@ public class UsuarioResource {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> find(@PathVariable Long id){
 		
-		Usuario entidade = service.findById(id);						
+		Agendamento entidade = service.findById(id);						
 		return ResponseEntity.status(HttpStatus.OK).body(entidade);
 	}
 	
-	@GetMapping("/email/{email}")
-	public ResponseEntity<?> find(@PathVariable String email){
-		
-		Usuario entidade = service.findByEmail(email);						
-		return ResponseEntity.status(HttpStatus.OK).body(entidade);
-	}
-
 	@GetMapping("/page")
-	public ResponseEntity<Page<UsuarioDTO>> findPage(
+	public ResponseEntity<Page<AgendamentoDTO>> findPage(
 			@RequestParam(value="page", defaultValue="0") Integer page, 
 			@RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage, 
-			@RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
+			@RequestParam(value="orderBy", defaultValue="id") String orderBy, 
 			@RequestParam(value="direction", defaultValue="ASC") String direction) {
-		Page<Usuario> list = service.findPage(page, linesPerPage, orderBy, direction);
-		Page<UsuarioDTO> listDTO = list.map(obj -> new UsuarioDTO(obj));
+		Page<Agendamento> list = service.findPage(page, linesPerPage, orderBy, direction);
+		Page<AgendamentoDTO> listDTO = list.map(obj -> new AgendamentoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody UsuarioNewDTO usuarioNewDTO) {
-		Usuario usuario = service.fromDTO(usuarioNewDTO);
-		usuario = service.save(usuario);
+	public ResponseEntity<Void> insert(@Valid @RequestBody AgendamentoNewDTO agendamentoNewDTO) {
+		Agendamento agendamento = service.fromDTO(agendamentoNewDTO);
+		agendamento = service.save(agendamento);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(usuario.getId()).toUri();
+				.path("/{id}").buildAndExpand(agendamento.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 	}	
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> update(@Valid @RequestBody UsuarioDTO usuarioDTO, @PathVariable("id") Long id) {
-		Usuario usuario = service.fromDTO(usuarioDTO);
-		usuario.setId(id);
-		usuario = service.update(usuario);
+	public ResponseEntity<Void> update(@Valid @RequestBody AgendamentoDTO agendamentoDTO, @PathVariable("id") Long id) {
+		Agendamento agendamento = service.fromDTO(agendamentoDTO);
+		agendamento.setId(id);
+		agendamento = service.update(agendamento);
 		return ResponseEntity.noContent().build();
 	}
 			
