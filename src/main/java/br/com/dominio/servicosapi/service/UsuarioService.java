@@ -20,6 +20,8 @@ import br.com.dominio.servicosapi.model.Grupo;
 import br.com.dominio.servicosapi.model.Usuario;
 import br.com.dominio.servicosapi.repository.Grupos;
 import br.com.dominio.servicosapi.repository.Usuarios;
+import br.com.dominio.servicosapi.security.UserSS;
+import br.com.dominio.servicosapi.service.exceptions.AuthorizationException;
 import br.com.dominio.servicosapi.service.exceptions.DataIntegrityException;
 import br.com.dominio.servicosapi.service.exceptions.EmailUsuarioJaCadastradoException;
 import br.com.dominio.servicosapi.service.exceptions.ObjectNotFoundException;
@@ -44,10 +46,10 @@ public class UsuarioService {
 	
     public Usuario findById(Long id) {
 		
-    	//UserSS user = UserService.authenticated();
-    	//if (user==null || !user.hasRole("ADMIN") && !id.equals(user.getId())) {
-		//	throw new AuthorizationException("Acesso negado");
-		//}
+    	UserSS user = UserService.authenticated();
+    	if (user==null || !user.hasRole("ADMIN") && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
     	    	
     	Optional<Usuario> optional = repository.findById(id);
     	
@@ -56,16 +58,15 @@ public class UsuarioService {
 	}
 	
     public Usuario findByEmail(String email) {
-		//UserSS user = UserService.authenticated();
-		//if (user == null || !user.hasRole("ADMIN") && !email.equals(user.getUsername())) {
-		//	throw new AuthorizationException("Acesso negado");
-		//}
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole("ADMIN") && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 	
 		Optional<Usuario> optional = repository.findByEmail(email);
 
 		return optional.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Email: " + email + ", Tipo: " + Usuario.class.getName()));
-
     }
     
 		

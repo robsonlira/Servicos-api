@@ -26,6 +26,8 @@ import br.com.dominio.servicosapi.model.Usuario;
 import br.com.dominio.servicosapi.repository.Agendamentos;
 import br.com.dominio.servicosapi.repository.Servicos;
 import br.com.dominio.servicosapi.repository.Usuarios;
+import br.com.dominio.servicosapi.security.UserSS;
+import br.com.dominio.servicosapi.service.exceptions.AuthorizationException;
 import br.com.dominio.servicosapi.service.exceptions.DataIntegrityException;
 import br.com.dominio.servicosapi.service.exceptions.ObjectNotFoundException;
 
@@ -42,17 +44,25 @@ public class AgendamentoService {
     private Servicos servicoRepository;
 	
 	@Autowired
-    private Usuarios usuarioRepository;	
-
-	
+	private UsuarioService usuarioService;
+		
 	public List<Agendamento> findAll(){
 		return repository.findAll();
 	}
 	
     public Agendamento findById(Long id) {
-		
+
     	Optional<Agendamento> optional = repository.findById(id);
-    	
+    	    	
+    	if (optional.isPresent()) {
+    	   
+    	   UserSS user = UserService.authenticated();
+    	       	   
+    	   if (user==null || !user.hasRole("ADMIN") && !optional.get().getUsuario().getId().equals(user.getId().longValue())) {
+			   throw new AuthorizationException("Acesso negado");
+		   }
+    	}
+    	    	
     	return optional.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Agendamento.class.getName()));
 	}
@@ -70,6 +80,13 @@ public class AgendamentoService {
 	
 	@Transactional
 	public Agendamento update(Agendamento entidade) {
+		
+ 	    UserSS user = UserService.authenticated();
+   	   
+ 	    if (user==null || !user.hasRole("ADMIN") && !entidade.getUsuario().getId().equals(user.getId().longValue())) {
+			   throw new AuthorizationException("Acesso negado");
+	    }			
+		
 		Agendamento newObj = findById(entidade.getId());
 		updateData(newObj, entidade);
 		return repository.save(newObj);
@@ -86,8 +103,16 @@ public class AgendamentoService {
 	}
 	
 	public Page<Agendamento> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return repository.findAll(pageRequest);
+		
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);		
+		Usuario usuario = usuarioService.findById(user.getId().longValue());
+		
+		return repository.findByUsuario(usuario, pageRequest);
 	}
 		
 	public Agendamento fromDTO(AgendamentoDTO objDto) {
@@ -99,7 +124,7 @@ public class AgendamentoService {
 			servicoRepository.getOne(objDto.getServico()),
 			Status.toEnum(objDto.getStatus()),
 			objDto.getValor(),
-			usuarioRepository.getOne(objDto.getUsuario()),
+			usuarioService.findById(objDto.getUsuario()),
 			null,
 			objDto.getDataEvento(),
 			objDto.getHoraEvento());
