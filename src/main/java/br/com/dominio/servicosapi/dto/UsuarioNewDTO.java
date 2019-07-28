@@ -9,6 +9,9 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import br.com.dominio.servicosapi.service.validation.UsuarioInsert;
+
+@UsuarioInsert
 public class UsuarioNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

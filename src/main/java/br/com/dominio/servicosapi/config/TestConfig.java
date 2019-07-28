@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import br.com.dominio.servicosapi.service.DBService;
+import br.com.dominio.servicosapi.service.EmailService;
+import br.com.dominio.servicosapi.service.MockEmailService;
 
 @Configuration
 @Profile("test")
@@ -22,4 +24,8 @@ public class TestConfig {
 		return true;
 	}
 	
+	@Bean
+	public EmailService emailService() {
+		return new MockEmailService();
+	}
 }

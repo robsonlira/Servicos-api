@@ -10,7 +10,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import br.com.dominio.servicosapi.model.Usuario;
+import br.com.dominio.servicosapi.service.validation.UsuarioUpdate;
 
+@UsuarioUpdate
 public class UsuarioDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

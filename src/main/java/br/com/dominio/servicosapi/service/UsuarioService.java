@@ -23,7 +23,6 @@ import br.com.dominio.servicosapi.repository.Usuarios;
 import br.com.dominio.servicosapi.security.UserSS;
 import br.com.dominio.servicosapi.service.exceptions.AuthorizationException;
 import br.com.dominio.servicosapi.service.exceptions.DataIntegrityException;
-import br.com.dominio.servicosapi.service.exceptions.EmailUsuarioJaCadastradoException;
 import br.com.dominio.servicosapi.service.exceptions.ObjectNotFoundException;
 //import br.com.dominio.avaliacao.ws.service.exceptions.SenhaObrigatoriaUsuarioException;
 import br.com.dominio.servicosapi.service.exceptions.SenhaObrigatoriaUsuarioException;
@@ -72,7 +71,9 @@ public class UsuarioService {
 		
 	@Transactional
 	public Usuario save(Usuario entidade) {
-		
+		/*
+		 *  Código comentado porque foi implementado uma validação customizada
+		 * 
 		Optional<Usuario> optional = repository.findByEmail(entidade.getEmail());
 		
 		if (optional.isPresent() && !optional.get().equals(entidade)) {
@@ -83,16 +84,24 @@ public class UsuarioService {
 			throw new SenhaObrigatoriaUsuarioException("Senha é obrigatória para novo usuário");
 		}
 		
-		//if (usuario.isNovo() || !StringUtils.isEmpty(usuario.getSenha())) {
-		//	usuario.setSenha(this.passwordEncoder.encode(usuario.getSenha()));
-		//} else if (StringUtils.isEmpty(usuario.getSenha())) {
-		//	usuario.setSenha(usuarioExistente.get().getSenha());
-		//}
+		if (entidade.isNovo() || !StringUtils.isEmpty(entidade.getSenha())) {
+			entidade.setSenha(this.passwordEncoder.encode(entidade.getSenha()));
+		} else if (StringUtils.isEmpty(entidade.getSenha())) {
+			entidade.setSenha(optional.get().getSenha());
+		}
 		
 		entidade.setConfirmacaoSenha(entidade.getSenha());
 		
 		if (!entidade.isNovo() && entidade.getAtivo() == null) {
 			entidade.setAtivo(optional.get().getAtivo());
+		}*/
+
+		if (entidade.isNovo() && StringUtils.isEmpty(entidade.getSenha())) {
+			throw new SenhaObrigatoriaUsuarioException("Senha é obrigatória para novo usuário");
+		}
+		
+		if (entidade.isNovo() || !StringUtils.isEmpty(entidade.getSenha())) {
+			entidade.setSenha(this.passwordEncoder.encode(entidade.getSenha()));
 		}
 		
 		return repository.save(entidade);
@@ -130,7 +139,7 @@ public class UsuarioService {
 		// Grupo Usuario
 		Grupo grupo = grupoRepository.getOne(2L);
 		
-		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), true, passwordEncoder.encode(objDto.getSenha()));
+		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), true, objDto.getSenha());
 		usuario.setDataNascimento(objDto.getDataNascimento());
 		usuario.getGrupos().add(grupo);
 		return usuario;
