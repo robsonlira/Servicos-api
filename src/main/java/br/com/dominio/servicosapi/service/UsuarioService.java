@@ -46,7 +46,7 @@ public class UsuarioService {
     public Usuario findById(Long id) {
 		
     	UserSS user = UserService.authenticated();
-    	if (user==null || !user.hasRole("ADMIN") && !id.equals(user.getId())) {
+    	if (user==null || !user.hasRole("ADMIN") && !id.equals(user.getId().longValue())) {
 			throw new AuthorizationException("Acesso negado");
 		}
     	    	
@@ -130,7 +130,7 @@ public class UsuarioService {
 	}
 	
 	public Usuario fromDTO(UsuarioDTO objDto) {
-		Usuario usuario = new Usuario(objDto.getId(), objDto.getNome(), objDto.getEmail(), objDto.getAtivo(), null);
+		Usuario usuario = new Usuario(objDto.getId(), objDto.getNome(), objDto.getEmail(), objDto.getTelefone(), objDto.getAtivo(), null);
 		usuario.setDataNascimento(objDto.getDataNascimento());
 		return usuario;
 	}
@@ -139,7 +139,7 @@ public class UsuarioService {
 		// Grupo Usuario
 		Grupo grupo = grupoRepository.getOne(2L);
 		
-		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), true, objDto.getSenha());
+		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), objDto.getTelefone(), true, objDto.getSenha());
 		usuario.setDataNascimento(objDto.getDataNascimento());
 		usuario.getGrupos().add(grupo);
 		return usuario;
@@ -148,6 +148,7 @@ public class UsuarioService {
 	private void updateData(Usuario newObj, Usuario entidade) {
 		newObj.setNome(entidade.getNome());
 		newObj.setEmail(entidade.getEmail());
+		newObj.setTelefone(entidade.getTelefone());
 	}
 
 }

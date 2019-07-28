@@ -51,7 +51,7 @@ public class DBService {
 		Servico servico2 = new Servico(null,"Serviço 2","Descrição do serviço 2", 25, Unidade.MINUTO, new BigDecimal("3.50"));
 		Servico servico3 = new Servico(null,"Serviço 3","Descrição do serviço 3", 40, Unidade.MINUTO, new BigDecimal("7.50"));
 				
-		Permissao permissao1 = new Permissao(null,"ADMIN");
+		Permissao permissao1 = new Permissao(null,"ROLE_ADMIN");
 		Permissao permissao2 = new Permissao(null,"USER");
 		
 		permissao1 = permissoes.save(permissao1);
@@ -67,16 +67,17 @@ public class DBService {
 		grupos.saveAll(Arrays.asList(grupo1, grupo2));
 		servicos.saveAll(Arrays.asList(servico1, servico2, servico3));
 		
-		Usuario usuario = new Usuario(null,"Admin","admin@gmail.com", true, pe.encode("123") );
-		Usuario usuario2 = new Usuario(null,"Robson","robson@gmail.com", true, pe.encode("123") );
-		Usuario usuario3 = new Usuario(null,"Jose","jose@gmail.com", true, pe.encode("123") );
-		Usuario usuario4 = new Usuario(null,"Felipe","felipe@gmail.com", true, pe.encode("123") );
-		Usuario usuario5 = new Usuario(null,"Tadeu","tadeu@gmail.com", true, pe.encode("123") );
+		Usuario usuario = new Usuario(null,"Admin","admin@gmail.com", "81912345678", true, pe.encode("123") );
+		Usuario usuario2 = new Usuario(null,"Robson","robson@gmail.com", "81912345677", true, pe.encode("123") );
+		Usuario usuario3 = new Usuario(null,"Jose","jose@gmail.com", "81972345676", true, pe.encode("123") );
+		Usuario usuario4 = new Usuario(null,"Felipe","felipe@gmail.com", "81912345675", true, pe.encode("123") );
+		Usuario usuario5 = new Usuario(null,"Tadeu","tadeu@gmail.com", "81982345674", true, pe.encode("123") );
 
         usuario.getGrupos().add(grupo1);
         usuario2.getGrupos().add(grupo2);
         usuario3.getGrupos().add(grupo2);
         usuario4.getGrupos().add(grupo2);
+        usuario5.getGrupos().add(grupo2);
         usuarios.saveAll(Arrays.asList(usuario, usuario2, usuario3, usuario4, usuario5));
         //saveAndFlush(usuario);
         

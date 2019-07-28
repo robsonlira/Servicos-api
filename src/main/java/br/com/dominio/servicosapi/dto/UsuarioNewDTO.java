@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
@@ -24,6 +25,9 @@ public class UsuarioNewDTO implements Serializable {
 	@Email(message = "E-mail inválido")
 	@Column(name="email", length = 60, unique = true)
 	private String email;
+	
+	@NotBlank(message = "Telefone é obrigatório")
+	private String telefone;
 	
 	@NotEmpty(message="Preenchimento obrigatório")
 	private String senha;
@@ -48,6 +52,14 @@ public class UsuarioNewDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public Date getDataNascimento() {

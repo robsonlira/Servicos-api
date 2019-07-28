@@ -47,6 +47,9 @@ public class Usuario {
 	@Column(name="email", length = 60, unique = true)
 	private String email;
 
+	@Column(name="telefone", length = 20)
+	private String telefone;
+	
 	@JsonIgnore
 	private String senha;
 	
@@ -71,11 +74,12 @@ public class Usuario {
 	}
 
 		
-	public Usuario(Long id, String nome, String email, Boolean ativo, String senha) {
+	public Usuario(Long id, String nome, String email, String telefone, Boolean ativo, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
+		this.telefone = telefone;
 		this.ativo = ativo;
 		this.senha = senha;
 	}
@@ -103,6 +107,15 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
 
 	public String getSenha() {
 		return senha;

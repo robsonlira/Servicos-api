@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.dominio.servicosapi.model.Servico;
+import br.com.dominio.servicosapi.model.Unidade;
 import br.com.dominio.servicosapi.repository.Servicos;
 import br.com.dominio.servicosapi.service.exceptions.DataIntegrityException;
 import br.com.dominio.servicosapi.service.exceptions.ObjectNotFoundException;
@@ -66,6 +67,7 @@ public class ServicoService {
 		newObj.setDuracao(entidade.getDuracao());
 		newObj.setDescricao(entidade.getDescricao());
 		newObj.setValor(entidade.getValor());
-		newObj.setIdUnidade(entidade.getIdUnidade());
+		newObj.setUnidade(entidade.getUnidade());
+        		
 	}
 }

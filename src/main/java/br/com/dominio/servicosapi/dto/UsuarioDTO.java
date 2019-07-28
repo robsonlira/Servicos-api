@@ -24,6 +24,10 @@ public class UsuarioDTO implements Serializable {
 	@NotBlank(message = "E-mail é obrigatório")
 	@Email(message = "E-mail inválido")
 	private String email;
+	
+	@NotBlank(message = "Telefone é obrigatório")
+	private String telefone;
+	
 	private Boolean ativo;
 	
 	@Temporal(TemporalType.TIMESTAMP)	
@@ -38,6 +42,7 @@ public class UsuarioDTO implements Serializable {
 		this.id = usuario.getId();
 		this.nome = usuario.getNome();
 		this.email = usuario.getEmail();
+		this.telefone = usuario.getTelefone();
 		this.ativo = usuario.getAtivo();
 		this.dataNascimento = usuario.getDataNascimento();
 	}
@@ -64,6 +69,14 @@ public class UsuarioDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public Boolean getAtivo() {

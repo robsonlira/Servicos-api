@@ -91,11 +91,11 @@ public class Servico implements Serializable {
 		this.duracao = duracao;
 	}
 
-	public Unidade getIdUnidade() {
+	public Unidade getUnidade() {
 		return Unidade.toEnum(unidade);
 	}
 
-	public void setIdUnidade(Unidade unidade) {
+	public void setUnidade(Unidade unidade) {
 		this.unidade = unidade.getCod();
 	}
 
