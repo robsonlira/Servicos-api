@@ -9,7 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -17,11 +17,9 @@ import org.springframework.util.StringUtils;
 import br.com.dominio.servicosapi.dto.UsuarioDTO;
 import br.com.dominio.servicosapi.dto.UsuarioNewDTO;
 import br.com.dominio.servicosapi.model.Grupo;
-import br.com.dominio.servicosapi.model.Servico;
 import br.com.dominio.servicosapi.model.Usuario;
 import br.com.dominio.servicosapi.repository.Grupos;
 import br.com.dominio.servicosapi.repository.Usuarios;
-import br.com.dominio.servicosapi.service.exceptions.AuthorizationException;
 import br.com.dominio.servicosapi.service.exceptions.DataIntegrityException;
 import br.com.dominio.servicosapi.service.exceptions.EmailUsuarioJaCadastradoException;
 import br.com.dominio.servicosapi.service.exceptions.ObjectNotFoundException;
@@ -37,8 +35,8 @@ public class UsuarioService {
 	@Autowired
     private Grupos grupoRepository;
 	
-	//@Autowired
-	//private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	public List<Usuario> findAll(){
 		return repository.findAll();
@@ -131,7 +129,7 @@ public class UsuarioService {
 		// Grupo Usuario
 		Grupo grupo = grupoRepository.getOne(2L);
 		
-		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), true, objDto.getSenha());
+		Usuario usuario = new Usuario(null, objDto.getNome(), objDto.getEmail(), true, passwordEncoder.encode(objDto.getSenha()));
 		usuario.setDataNascimento(objDto.getDataNascimento());
 		usuario.getGrupos().add(grupo);
 		return usuario;

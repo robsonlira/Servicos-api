@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.dominio.servicosapi.model.Agendamento;
@@ -25,6 +26,9 @@ import br.com.dominio.servicosapi.repository.Usuarios;
 
 @Service
 public class DBService {
+	
+	@Autowired
+	private PasswordEncoder pe;
 	
 	@Autowired
 	private Grupos grupos;
@@ -63,7 +67,7 @@ public class DBService {
 		grupos.saveAll(Arrays.asList(grupo1, grupo2));
 		servicos.saveAll(Arrays.asList(servico1, servico2, servico3));
 		
-		Usuario usuario = new Usuario(null,"Admin","admin@gmail.com", true, "123" );
+		Usuario usuario = new Usuario(null,"Admin","admin@gmail.com", true, pe.encode("123") );
 		
         usuario.getGrupos().add(grupo1);
         usuarios.saveAndFlush(usuario);
